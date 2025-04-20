@@ -1,6 +1,8 @@
 // File: src/main/java/com/devaz/ironmanquesting/IronmanQuestingPlugin.java
 // Description: Main plugin class. Registers overlay on start and removes on shutdown.
 // ⚠️ Depends on IronmanQuestingOverlay and IronmanQuestingConfig.
+// ⚠️ Ensures overlay receives injected ConfigManager to persist step state.
+// ⚠️ Includes temporary developer test hook to simulate step completion.
 
 package com.devaz.ironmanquesting;
 
@@ -26,11 +28,19 @@ public class IronmanQuestingPlugin extends Plugin
     @Inject
     private Client client;
 
+    @Inject
+    private ConfigManager configManager;
+
     @Override
     protected void startUp()
     {
         System.out.println("[IronmanQuestingPlugin] 🔧 Ironman Questing Helper started");
         overlayManager.add(overlay);
+
+        // 🔧 Developer test hook
+        configManager.setConfiguration("ironmanquesting", "step.1", true);
+        Boolean testStep = configManager.getConfiguration("ironmanquesting", "step.1", boolean.class);
+        System.out.println("🔄 Developer test: Step 1 marked as done = " + testStep);
     }
 
     @Override

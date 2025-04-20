@@ -8,6 +8,9 @@ package com.devaz.ironmanquesting;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import net.runelite.api.Client;
+import net.runelite.api.Quest;
+import net.runelite.api.QuestState;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.OverlayPriority;
@@ -23,13 +26,15 @@ import java.util.List;
 public class IronmanQuestingOverlay extends Overlay
 {
     private final Client client;
+    private final ConfigManager configManager;
     private final PanelComponent panelComponent = new PanelComponent();
     private final List<QuestStep> steps = new ArrayList<>();
 
     @Inject
-    public IronmanQuestingOverlay(Client client)
+    public IronmanQuestingOverlay(Client client, ConfigManager configManager)
     {
         this.client = client;
+        this.configManager = configManager;
         setPosition(OverlayPosition.TOP_LEFT);
         setPriority(OverlayPriority.HIGH);
         loadSteps();
@@ -43,12 +48,15 @@ public class IronmanQuestingOverlay extends Overlay
             .left("Ironman Questing Steps")
             .build());
 
-        for (int i = 0; i < steps.size(); i++)
+        for (QuestStep step : steps)
         {
-            QuestStep step = steps.get(i);
+            boolean done = configManager.getConfiguration("ironmanquesting", "step." + step.id, boolean.class) != null
+                ? configManager.getConfiguration("ironmanquesting", "step." + step.id, boolean.class)
+                : step.done;
+
             panelComponent.getChildren().add(LineComponent.builder()
-                .left((i + 1) + ". " + step.description)
-                .right(step.done ? "✔️" : "⏳")
+                .left(step.id + ". " + step.description)
+                .right(done ? "✔️" : "⏳")
                 .build());
         }
 
