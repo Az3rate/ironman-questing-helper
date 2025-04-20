@@ -1,4 +1,5 @@
-# 🛡️ Ironman Questing Helper
+# 🛡️ Ironman Questing Helper by Az
+_A plugin built for perfectionist Ironmen, by Dev_Az_
 
 A RuneLite plugin to guide Ironman accounts through the **most optimal progression route**, pulling strategies from multiple expert sources — not just the OSRS Wiki.
 
@@ -98,7 +99,7 @@ Inspired by:
 If you have suggestions, feedback, or would like to contribute to quest step data:
 
 📨 **Discord:** `Azerate`  
-🐙 **GitHub:** [github.com/yourname/ironman-questing-helper](https://github.com/yourname/ironman-questing-helper)
+🐙 **GitHub:** [github.com/Az3rate](https://github.com/Az3rate)
 
 ---
 

@@ -13,7 +13,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.overlay.OverlayManager;
 
 @PluginDescriptor(
-    name = "Ironman Questing Helper"
+    name = "Ironman Questing Helper by Az"
 )
 public class IronmanQuestingPlugin extends Plugin
 {
