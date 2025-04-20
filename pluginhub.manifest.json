@@ -1,0 +1,10 @@
+{
+    "internalName": "ironmanquesting",
+    "displayName": "Ironman Questing Helper",
+    "description": "A plugin that helps new Ironman accounts complete quests efficiently",
+    "tags": ["ironman", "quest", "helper"],
+    "category": "Utility",
+    "creator": "Dev_Az",
+    "version": "0.1"
+  }
+  

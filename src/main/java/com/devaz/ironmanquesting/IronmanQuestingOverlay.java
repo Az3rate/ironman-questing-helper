@@ -1,0 +1,93 @@
+// File: src/main/java/com/devaz/ironmanquesting/IronmanQuestingOverlay.java
+// Description: Overlay that renders quest steps from quest_steps.json.
+// ⚠️ Depends on IronmanQuestingPlugin, loads from resource path `/quest_steps.json`.
+// ⚠️ quest_steps.json must be structured with a top-level object and "steps" array.
+
+package com.devaz.ironmanquesting;
+
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+import net.runelite.api.Client;
+import net.runelite.client.ui.overlay.Overlay;
+import net.runelite.client.ui.overlay.OverlayPosition;
+import net.runelite.client.ui.overlay.OverlayPriority;
+import net.runelite.client.ui.overlay.components.LineComponent;
+import net.runelite.client.ui.overlay.components.PanelComponent;
+
+import javax.inject.Inject;
+import java.awt.*;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+public class IronmanQuestingOverlay extends Overlay
+{
+    private final Client client;
+    private final PanelComponent panelComponent = new PanelComponent();
+    private final List<QuestStep> steps = new ArrayList<>();
+
+    @Inject
+    public IronmanQuestingOverlay(Client client)
+    {
+        this.client = client;
+        setPosition(OverlayPosition.TOP_LEFT);
+        setPriority(OverlayPriority.HIGH);
+        loadSteps();
+    }
+
+    @Override
+    public Dimension render(Graphics2D graphics)
+    {
+        panelComponent.getChildren().clear();
+        panelComponent.getChildren().add(LineComponent.builder()
+            .left("Ironman Questing Steps")
+            .build());
+
+        for (int i = 0; i < steps.size(); i++)
+        {
+            QuestStep step = steps.get(i);
+            panelComponent.getChildren().add(LineComponent.builder()
+                .left((i + 1) + ". " + step.description)
+                .right(step.done ? "✔️" : "⏳")
+                .build());
+        }
+
+        return panelComponent.render(graphics);
+    }
+
+    private void loadSteps()
+    {
+        try (InputStreamReader reader = new InputStreamReader(
+            getClass().getResourceAsStream("/quest_steps.json")))
+        {
+            QuestData questData = new Gson().fromJson(reader, QuestData.class);
+            if (questData != null && questData.steps != null)
+            {
+                steps.clear();
+                steps.addAll(questData.steps);
+            }
+        }
+        catch (Exception e)
+        {
+            System.err.println("[IronmanQuestingOverlay] Failed to load quest_steps.json: " + e.getMessage());
+        }
+    }
+
+    public Client getClient()
+    {
+        return client;
+    }
+
+    private static class QuestData
+    {
+        @SerializedName("steps")
+        List<QuestStep> steps;
+    }
+
+    private static class QuestStep
+    {
+        int id;
+        String description;
+        boolean done;
+    }
+}
